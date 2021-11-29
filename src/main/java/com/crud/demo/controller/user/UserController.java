@@ -50,7 +50,7 @@ public class UserController {
             if (user != null) {
                 response.setSuccess(true);
                 response.setData(user);
-                return new ResponseEntity<>(user, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 response.setSuccess(false);
                 response.addErrorMsgToResponse(Constants.USER_NOT_FOUND);
@@ -89,4 +89,49 @@ public class UserController {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping
+    public ResponseEntity<?> updateUser(@Validated @RequestBody User user, BindingResult result){
+
+        Response response = new Response();
+
+        if(result.hasErrors()){
+            Response errorResponse = new Response();
+            response.setSuccess(false);
+            result.getAllErrors().forEach(error -> errorResponse.addErrorMsgToResponse(error.getDefaultMessage()));
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+
+        response = userService.UpdateUser(user);
+
+        if(response.isSuccess()){
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
+
+        Response response = new Response();
+        try {
+            User user = userService.DeleteById(id);
+
+            if (user != null) {
+                response.setSuccess(true);
+                response.setData(user);
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            } else {
+                response.setSuccess(false);
+                response.addErrorMsgToResponse(Constants.USER_NOT_FOUND);
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.addErrorMsgToResponse(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

@@ -67,4 +67,45 @@ public class UserService {
         }
         return response;
     }
+
+    public Response UpdateUser(User user) {
+        Response response = new Response();
+
+        try {
+            Optional<User> tempUser = userRepository.findById(user.getId());
+            if (tempUser.isPresent()) {
+                Optional<Hrchy> hrchy = hrchyRepository.findById(user.getHrchy().getId());
+
+                if (hrchy.isPresent()) {
+                    user.setHrchy(hrchy.get());
+                    userRepository.save(user);
+
+                    response.setSuccess(true);
+                    response.setData(user);
+                } else {
+                    response.setSuccess(false);
+                    response.addErrorMsgToResponse(Constants.HRCHY_NOT_FOUND);
+                }
+            } else {
+                response.setSuccess(false);
+                response.addErrorMsgToResponse(Constants.USER_NOT_FOUND);
+            }
+        }catch(Exception e){
+            response.setSuccess(false);
+            response.addErrorMsgToResponse(e.getMessage());
+        }
+
+        return response;
+    }
+
+    public User DeleteById(int id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if(user.isPresent()){
+            userRepository.delete(user.get());
+            return user.get();
+        }else{
+            return new User();
+        }
+    }
 }

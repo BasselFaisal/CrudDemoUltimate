@@ -43,9 +43,9 @@ public class Hrchy {
     @Column(name="inactv_dsc")
     private String inactiveDes;
 
-    @OneToOne(mappedBy = "hrchy", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private User user;
+//    @OneToOne(mappedBy = "hrchy", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonIgnore
+//    private User user;
 
     public int getId() {
         return id;
@@ -127,11 +127,11 @@ public class Hrchy {
         this.inactiveDes = inactiveDes;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 }
